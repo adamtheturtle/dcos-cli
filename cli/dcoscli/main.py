@@ -69,19 +69,22 @@ def _main():
 
     util.configure_process_from_environ()
 
-    if config.uses_deprecated_config():
-        cluster.move_to_cluster_config()
-
     if args['--version']:
         return _get_versions()
 
     command = args['<command>']
 
     if not command:
-        if args['--help']:
-            command = "help"
-        else:
-            return dcos_help()
+        return dcos_help()
+
+    if config.uses_deprecated_config():
+        if constants.DCOS_CONFIG_ENV in os.environ:
+            msg = ('{} is deprecated, please consider using '
+                   '`dcos cluster setup <dcos_url>`.')
+            err = errors.DefaultError(msg.format(constants.DCOS_CONFIG_ENV))
+            emitter.publish(err)
+
+        cluster.move_to_cluster_config()
 
     if command in subcommand.default_subcommands():
         sc = SubcommandMain(command, args['<args>'])
