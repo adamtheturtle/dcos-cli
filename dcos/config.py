@@ -173,6 +173,15 @@ def get_config_val_envvar(name, config=None):
     if config is None:
         config = get_config()
 
+    # This is a list of configs which cannot be overriden by env variables
+    env_blacklist = [
+        'core.dcos_url',
+        'core.dcos_acs_token',
+        'core.mesos_master_url',
+    ]
+    if name in env_blacklist:
+        return config.get(name), None
+
     section, subkey = split_key(name.upper())
 
     env_var = None

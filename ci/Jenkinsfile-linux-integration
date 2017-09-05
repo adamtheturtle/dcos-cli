@@ -161,7 +161,7 @@ def testBuilder(String platform, String nodeId, String workspace = null) {
                              credentialsId: '23743034-1ac4-49f7-b2e6-a661aee2d11b',
                              variable: 'CLI_TEST_SSH_KEY_PATH']]) {
 
-                            withEnv(["DCOS_IP=${dcosUrl}"]) {
+                            withEnv(["DCOS_URL=${dcosUrl}"]) {
                                 try {
                                     body()
                                 } catch(InterruptedException | hudson.AbortException e) {
@@ -207,8 +207,8 @@ builders['linux-tests'] = testBuilder('linux', 'py35', '/workspace')({
         sh '''
            rm -rf ~/.dcos; \
            grep -q "^.* dcos.snakeoil.mesosphere.com$" /etc/hosts && \
-           sed -iold "s/^.* dcos.snakeoil.mesosphere.com$/${DCOS_IP} dcos.snakeoil.mesosphere.com/" /etc/hosts || \
-           echo ${DCOS_IP} dcos.snakeoil.mesosphere.com >> /etc/hosts'''
+           sed -iold "s/^.* dcos.snakeoil.mesosphere.com$/${DCOS_URL} dcos.snakeoil.mesosphere.com/" /etc/hosts || \
+           echo ${DCOS_URL} dcos.snakeoil.mesosphere.com >> /etc/hosts'''
 
         dir('dcos-cli/cli') {
             sh '''

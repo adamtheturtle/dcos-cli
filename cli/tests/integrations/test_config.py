@@ -189,30 +189,16 @@ def test_bad_port_fail_url_validation(env):
                          'http://localhost:bad_port/', env)
 
 
-def test_dcos_url_env_var(env):
+def test_dcos_url_env_var_blacklisted(env):
     env['DCOS_URL'] = 'http://foobar'
 
     returncode, stdout, stderr = exec_command(
         ['dcos', 'service'], env=env)
-    assert returncode == 1
-    assert stdout == b''
-    assert stderr.startswith(
+    assert returncode == 0
+    assert not stderr.startswith(
         b'URL [http://foobar/mesos/master/state.json] is unreachable')
 
     env.pop('DCOS_URL')
-
-
-def test_dcos_dcos_url_env_var(env):
-    env['DCOS_DCOS_URL'] = 'http://foobar'
-
-    returncode, stdout, stderr = exec_command(
-        ['dcos', 'service'], env=env)
-    assert returncode == 1
-    assert stdout == b''
-    assert stderr.startswith(
-        b'URL [http://foobar/mesos/master/state.json] is unreachable')
-
-    env.pop('DCOS_DCOS_URL')
 
 
 @pytest.mark.skipif(
