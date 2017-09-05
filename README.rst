@@ -118,23 +118,6 @@ environment appropriately.
    avoid conflicts with previous runs.
 
 
-#. Copy a static :code:`dcos.toml` configuration file from the source repo into this
-   folder::
-
-    $ cp cli/tests/data/dcos.toml ${DCOS_DIR}
-
-
-#. Set the proper permissions on this file so that it can be used by the CLI::
-
-    $ chmod 600 ${DCOS_DIR}/dcos.toml
-
-
-#. Export the :code:`DCOS_CONFIG` environment variable so that the CLI knows to
-   use this file for its default config::
-
-    $ export DCOS_CONFIG=${DCOS_DIR}/dcos.toml
-
-
 #. Set the :code:`CLI_TEST_SSH_KEY_PATH` to point at appropriate ssh credentials to
    your cluster. This is used by the :code:`node` integration tests::
 
@@ -147,11 +130,18 @@ environment appropriately.
     $ echo "<cluster-ip-or-url> dcos.snakeoil.mesosphere.com" >> /etc/hosts
 
 
-#. Finally, once all of this is set up, you need to launch a DC/OS cluster with
-   the appropriate capabilities (see below in the section on :code:`Running`) and
-   manually log into it::
+#. Once all of this is set up, you need to launch a DC/OS cluster with the
+   appropriate capabilities (see below in the section on :code:`Running`) and
+   manually configure the CLI to use it::
 
-    $ dcos cluster setup <cluster-ip-or-url>
+    $ dcos cluster setup dcos.snakeoil.mesosphere.com
+
+
+#. Finally, once all of this is set up, you need to add a few configurations
+   for the cluster::
+
+    $ dcos config set core.reporting false
+    $ dcos config set core.timeout 5
 
 Running
 #######
